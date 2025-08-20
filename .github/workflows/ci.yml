@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
 
 permissions:
   id-token: write
@@ -34,9 +40,8 @@ jobs:
             git diff
             exit 1
           fi
-      - run: |
-          go test -v -race -coverprofile=coverage.out ./...
-          go tool cover -func=coverage.out
+      - run: go test -v -race -coverprofile=coverage.out ./...
+      - run: go tool cover -func=coverage.out
       - uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5.5.0
         with:
           file: ./coverage.out
