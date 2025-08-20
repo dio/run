@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -31,9 +34,11 @@ jobs:
             git diff
             exit 1
           fi
-      - run: go test -v -race -coverprofile=coverage.out ./...
-      - run: go tool cover -func=coverage.out
+      - run: |
+          go test -v -race -coverprofile=coverage.out ./...
+          go tool cover -func=coverage.out
       - uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5.5.0
         with:
           file: ./coverage.out
+          use_oidc: true
           fail_ci_if_error: false
